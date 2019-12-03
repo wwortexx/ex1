@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>Image</title>
+</head>
+<body>
+    <form id="nameform" method="post">
+    {% csrf_token %}
+    <input id="filenameid" name="filename">
+    <button type="submit">Select</button>
+  </form>
+    <form id="submitform" method="post" action="image/{{img.name}}" enctype="multipart/form-data">
+    {% csrf_token %}
+        <input hidden id="filenameid2" name="filename" value="">
+    <input id="fileid" type="file" name="file" disabled>
+    <button type="submit">Upload</button>
+  </form>
+</body>
+<script>
+    $(function(){
+
+      $('#nameform').on('submit',function(e){
+        e.preventDefault();
+        var fields = $(this).serialize().split('&');
+        var filename = fields[1].split('=')[1];
+           $.get('getName/'+filename+'/', function(data){
+                var fpath = 'image/'+filename+'/';
+                $('#submitform').attr('action',fpath);
+                $('#filenameid2').attr('value',filename);
+               $('#fileid').removeAttr('disabled');
+           });
+      });
+
+    });
+</script>
+</html>
